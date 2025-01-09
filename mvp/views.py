@@ -2,8 +2,28 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Lesson, UserLessonProgress
-from .serializers import LessonSerializer, UserLessonProgressSerializer
+from .models import (
+    Lesson,
+    UserLessonProgress,
+    Quotes,
+    Image,
+    Resource,
+    Video,
+    Sound,
+    Comment,
+    Reply,
+    )
+from .serializers import (
+    LessonSerializer,
+    UserLessonProgressSerializer,
+    QuotesSerializer,
+    ImageSerializer,
+    ResourceSerializer,
+    VideoSerializer,
+    SoundSerializer,
+    CommentSerializer,
+    ReplySerializer
+)
 
 
 
@@ -62,3 +82,256 @@ def user_progress(request):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+#                                  Quotes endpoints
+
+@api_view(['GET'])
+def quotes_list(request):
+    quotes = Quotes.objects.all()
+    serializer = QuotesSerializer(quotes, many=True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def quotes_create(request):
+    serializer = QuotesSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def quotes_detail(request, pk):
+    quote = Quotes.objects.get(id=pk)
+    serializer = QuotesSerializer(quote, many=False)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def quotes_update(request, pk):
+    quote = Quotes.objects.get(id=pk)
+    serializer = QuotesSerializer(instance=quote, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
+
+@api_view(['DELETE'])
+def quotes_delete(request, pk):
+    quote = Quotes.objects.get(id=pk)
+    quote.delete()
+    return Response('Quote deleted successfully')
+
+
+#                                   Image endpoints
+
+@api_view(['GET'])
+def image_list(request):
+    images = Image.objects.all()
+    serializer = ImageSerializer(images, many=True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def image_create(request):
+    serializer = ImageSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def image_detail(request, pk):
+    image = Image.objects.get(id=pk)
+    serializer = ImageSerializer(image, many=False)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def image_update(request, pk):
+    image = Image.objects.get(id=pk)
+    serializer = ImageSerializer(instance=image, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
+
+@api_view(['DELETE'])
+def image_delete(request, pk):
+    image = Image.objects.get(id=pk)
+    image.delete()
+    return Response('Image deleted successfully')
+
+
+#                                   Resource endpoints
+
+@api_view(['GET'])
+def resource_list(request):
+    resources = Resource.objects.all()
+    serializer = ResourceSerializer(resources, many=True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def resource_create(request):
+    serializer = ResourceSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def resource_detail(request, pk):
+    resource = Resource.objects.get(id=pk)
+    serializer = ResourceSerializer(resource, many=False)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def resource_update(request, pk):
+    resource = Resource.objects.get(id=pk)
+    serializer = ResourceSerializer(instance=resource, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
+
+@api_view(['DELETE'])
+def resource_delete(request, pk):
+    resource = Resource.objects.get(id=pk)
+    resource.delete()
+    return Response('Resource deleted successfully')
+
+
+#                                   Video endpoints
+
+@api_view(['GET'])
+def video_list(request):
+    videos = Video.objects.all()
+    serializer = VideoSerializer(videos, many=True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def video_create(request):
+    serializer = VideoSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def video_detail(request, pk):
+    video = Video.objects.get(id=pk)
+    serializer = VideoSerializer(video, many=False)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def video_update(request, pk):
+    video = Video.objects.get(id=pk)
+    serializer = VideoSerializer(instance=video, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
+
+@api_view(['DELETE'])
+def video_delete(request, pk):
+    video = Video.objects.get(id=pk)
+    video.delete()
+    return Response('Video deleted successfully')
+
+
+#                                   Sound endpoints
+
+@api_view(['GET'])
+def sound_list(request):
+    sounds = Sound.objects.all()
+    serializer = SoundSerializer(sounds, many=True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def sound_create(request):
+    serializer = SoundSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def sound_detail(request, pk):
+    sound = Sound.objects.get(id=pk)
+    serializer = SoundSerializer(sound, many=False)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def sound_update(request, pk):
+    sound = Sound.objects.get(id=pk)
+    serializer = SoundSerializer(instance=sound, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
+
+@api_view(['DELETE'])
+def sound_delete(request, pk):
+    sound = Sound.objects.get(id=pk)
+    sound.delete()
+    return Response('Sound deleted successfully')
+
+
+#                                   Comment endpoints
+
+@api_view(['GET'])
+def comment_list(request):
+    comments = Comment.objects.all()
+    serializer = CommentSerializer(comments, many=True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def comment_create(request):
+    serializer = CommentSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def comment_detail(request, pk):
+    comment = Comment.objects.get(id=pk)
+    serializer = CommentSerializer(comment, many=False)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def comment_update(request, pk):
+    comment = Comment.objects.get(id=pk)
+    serializer = CommentSerializer(instance=comment, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
+
+@api_view(['DELETE'])
+def comment_delete(request, pk):
+    comment = Comment.objects.get(id=pk)
+    comment.delete()
+    return Response('Comment deleted successfully')
+
+
+#                                   Reply endpoints
+
+@api_view(['GET'])
+def reply_list(request):
+    replies = Reply.objects.all()
+    serializer = ReplySerializer(replies, many=True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def reply_create(request):
+    serializer = ReplySerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def reply_detail(request, pk):
+    reply = Reply.objects.get(id=pk)
+    serializer = ReplySerializer(reply, many=False)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def reply_update(request, pk):
+    reply = Reply.objects.get(id=pk)
+    serializer = ReplySerializer(instance=reply, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
+
+@api_view(['DELETE'])
+def reply_delete(request, pk):
+    reply = Reply.objects.get(id=pk)
+    reply.delete()
+    return Response('Reply deleted successfully')
