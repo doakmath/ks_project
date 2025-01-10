@@ -1,7 +1,10 @@
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from django.http import JsonResponse
 from rest_framework import status
+from django.contrib.auth.models import User
+
 from .models import (
     Lesson,
     UserLessonProgress,
@@ -24,6 +27,7 @@ from .serializers import (
     CommentSerializer,
     ReplySerializer
 )
+
 
 
 
@@ -64,24 +68,98 @@ def lesson_delete(request, pk):
 
 #                                     User Progress
 
-@api_view(['GET', 'POST'])
-def user_progress(request):
-    if request.method == 'GET':
-        user_id = request.query_params.get('user')
-        if not user_id:
-            return Response({"error": "User ID is required"}, status=status.HTTP_400_BAD_REQUEST)
+@api_view(['GET'])
+def get_lessons_and_progress(request, user_id):
+    try:
+        user = User.objects.get(pk=user_id)
+    except User.DoesNotExist:
+        return Response({'error': 'User not found'}, status=404)
 
-        progress = UserLessonProgress.objects.filter(user_id=user_id)
-        serializer = UserLessonProgressSerializer(progress, many=True)
+    lessons = Lesson.objects.all()
+
+    # Create progress records if they don't exist
+    for lesson in lessons:
+        UserLessonProgress.objects.get_or_create(user=user, lesson=lesson)
+
+    lesson_serializer = LessonSerializer(lessons, many=True)
+    progress_serializer = UserLessonProgressSerializer(
+        UserLessonProgress.objects.filter(user=user), many=True
+    )
+
+    return Response({
+        'lessons': lesson_serializer.data,
+        'progress': progress_serializer.data
+    })
+
+# PUT request to update the progress of a lesson
+@api_view(['PUT'])
+def update_progress(request, pk):
+    try:
+        progress = UserLessonProgress.objects.get(pk=pk)
+    except UserLessonProgress.DoesNotExist:
+        return Response({'error': 'Progress not found'}, status=404)
+
+    serializer = UserLessonProgressSerializer(progress, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
         return Response(serializer.data)
+    return Response(serializer.errors, status=400)
 
-    elif request.method == 'POST':
-        data = request.data
-        serializer = UserLessonProgressSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+# @api_view(['GET', 'POST'])
+# def user_progress(request):
+#     if request.method == 'GET':
+#         user_id = request.query_params.get('user')
+#         if not user_id:
+#             return Response({"error": "User ID is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+#         progress = UserLessonProgress.objects.filter(user_id=user_id)
+#         serializer = UserLessonProgressSerializer(progress, many=True)
+#         return Response(serializer.data)
+
+#     elif request.method == 'POST':
+#         data = request.data
+#         serializer = UserLessonProgressSerializer(data=data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# @api_view(['PUT'])
+# def update_progress(request, pk):
+#     try:
+#         progress = UserLessonProgress.objects.get(pk=pk)
+#     except UserLessonProgress.DoesNotExist:
+#         return Response({'error': 'Progress not found'}, status=404)
+
+#     serializer = UserLessonProgressSerializer(progress, data=request.data)
+#     if serializer.is_valid():
+#         serializer.save()
+#         return Response(serializer.data)
+#     return Response(serializer.errors, status=400)
+
+# @api_view(['GET'])
+# def get_lessons_and_progress(request, user_id):
+#     try:
+#         user = User.objects.get(pk=user_id)
+#     except User.DoesNotExist:
+#         return Response({'error': 'User not found'}, status=404)
+
+#     lessons = Lesson.objects.all()
+
+#     # Create progress records for each lesson if they don't exist
+#     for lesson in lessons:
+#         UserLessonProgress.objects.get_or_create(user=user, lesson=lesson)
+
+#     # Serialize the lessons and progress
+#     lesson_serializer = LessonSerializer(lessons, many=True)
+#     progress_serializer = UserLessonProgressSerializer(
+#         UserLessonProgress.objects.filter(user=user), many=True
+#     )
+
+#     return Response({
+#         'lessons': lesson_serializer.data,
+#         'progress': progress_serializer.data
+#     })
 
 
 #                                  Quotes endpoints
@@ -335,3 +413,15 @@ def reply_delete(request, pk):
     reply = Reply.objects.get(id=pk)
     reply.delete()
     return Response('Reply deleted successfully')
+
+
+#                                 Auth0 user sync endpoints
+
+@api_view(['POST'])
+def sync_user(request):
+    user_data = request.data
+    sub = user_data.get('sub')
+    email = user_data.get('email')
+
+    user, created = User.objects.get_or_create(username=sub, defaults={'email': email})
+    return JsonResponse({'id': user.id, 'created': created})

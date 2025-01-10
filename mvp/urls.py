@@ -9,7 +9,8 @@ urlpatterns = [
     path('lessons/<int:pk>/update/', views.lesson_update, name='lesson_update'),
     path('lessons/<int:pk>/delete/', views.lesson_delete, name='lesson_delete'),
     # User Progress endpoints
-    path('progress/', views.user_progress, name='user_progress'),
+    path('progress/<int:user_id>/', views.get_lessons_and_progress, name='get_lessons_and_progress'),
+    path('progress/update/<int:pk>/', views.update_progress, name='update_progress'),
     # Quotes endpoints
     path('quotes/', views.quotes_list, name='quotes_list'),
     path('quotes/create/', views.quotes_create, name='quotes_create'),
@@ -52,4 +53,6 @@ urlpatterns = [
     path('reply/<int:pk>/', views.reply_detail, name='reply_detail'),
     path('reply/<int:pk>/update/', views.reply_update, name='reply_update'),
     path('reply/<int:pk>/delete/', views.reply_delete, name='reply_delete'),
+    # Sync user endpoints
+    path('sync_user/', views.sync_user, name='sync_user'),
 ]
