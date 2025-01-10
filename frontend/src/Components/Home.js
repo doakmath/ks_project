@@ -33,7 +33,9 @@ function Home() {
   return (
     <div className="home-container">
       {/* Quote Modal at the top */}
+      <div className="quote-modal-content">
       <QuoteModal />
+      </div>
 
       {/* Navigation Tabs */}
       <div className="tab-navigation">
