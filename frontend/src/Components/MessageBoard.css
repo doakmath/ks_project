@@ -1,0 +1,68 @@
+.message-board {
+    padding: 20px;
+  }
+
+  .new-comment {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .new-comment input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  .new-comment button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .comment-item {
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+  }
+
+  .reply-count {
+    color: #007bff;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+
+  .replies-list {
+    margin-top: 10px;
+    padding-left: 20px;
+  }
+
+  .reply-item {
+    margin-bottom: 10px;
+  }
+
+  .new-reply {
+    display: flex;
+    gap: 10px;
+  }
+
+  .new-reply input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  .new-reply button {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }

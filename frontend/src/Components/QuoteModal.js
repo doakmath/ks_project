@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import './QuoteModal.css';
 
 function QuoteModal() {
   const [quotes, setQuotes] = useState([]);
@@ -7,7 +8,6 @@ function QuoteModal() {
   const [randomQuote, setRandomQuote] = useState(null);
   const [randomImage, setRandomImage] = useState(null);
 
-  // Fetch quotes and images from the API
   useEffect(() => {
     Promise.all([
       axios.get(`${process.env.REACT_APP_API_URL}quotes/`),
@@ -17,7 +17,6 @@ function QuoteModal() {
         setQuotes(quotesResponse.data);
         setImages(imagesResponse.data);
 
-        // Select random quote and image
         const randomQuoteIndex = Math.floor(Math.random() * quotesResponse.data.length);
         const randomImageIndex = Math.floor(Math.random() * imagesResponse.data.length);
         setRandomQuote(quotesResponse.data[randomQuoteIndex]);
@@ -26,15 +25,15 @@ function QuoteModal() {
       .catch(error => console.error(error));
   }, []);
 
-  // Render only if both quote and image are loaded
   if (!randomQuote || !randomImage) {
     return <div>Loading...</div>;
   }
 
   return (
-    <div className="quote-modal" style={{ backgroundImage: `url(${randomImage.image_url})` }}>
-      <div className="quote-content">
-        <h3>{randomQuote.quote}</h3>
+    <div className="quote-modal">
+      <div className="quote-modal-content">
+        <img src={randomImage.image_url} alt="Random" className="quote-image" />
+        <h3 className="quote-text">{randomQuote.quote}</h3>
       </div>
     </div>
   );

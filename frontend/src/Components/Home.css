@@ -1,80 +1,56 @@
-/* General container styling for the home page */
 .home-container {
     display: flex;
     flex-direction: column;
-    height: 150vh;
+    height: 100vh;
     background-color: #f5f5f5;
-  }
-
- /* Styling for the QuoteModal section */
-.home-container > div:first-child {
-    height: 30%; /* Takes up 80% of the page */
-    display: flex;
     align-items: center;
-    justify-content: center;
-    padding: 10px;
-    box-sizing: border-box;
-    background-color: #ffffff;
-    border-bottom: 1px solid #ccc;
-    overflow: hidden; /* Prevent content overflow */
+    padding: 20px;
   }
 
-  /* Styling for the modal content */
-.quote-modal-content {
-    max-height: 100%;
-    max-width: 100%;
-    text-align: center;
-    overflow: hidden;
-    object-fit: contain;
-    /* Ensures images fit within the modal */
-  }
-
-  /* Styling for the tab navigation */
   .tab-navigation {
     display: flex;
     justify-content: space-around;
-    align-items: center;
+    width: 90%;
+    max-width: 800px;
+    margin: 20px 0;
     padding: 10px;
     background-color: #ffffff;
-    border-bottom: 1px solid #ccc;
+    border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    z-index: 10; /* Ensures buttons are above other elements */
   }
 
-  /* Buttons inside the navigation */
   .tab-navigation button {
     padding: 10px 20px;
     font-size: 16px;
-    cursor: pointer;
     border: none;
-    background-color: transparent;
-    color: #333;
+    background-color: #007bff;
+    color: #ffffff;
+    cursor: pointer;
     transition: all 0.3s ease;
+    border-radius: 4px;
+  }
+
+  .tab-navigation button:hover {
+    background-color: #0056b3;
   }
 
   .tab-navigation button.active {
     font-weight: bold;
-    color: #007bff;
-    border-bottom: 2px solid #007bff;
+    background-color: #0056b3;
+    border-bottom: 2px solid #ffffff;
   }
 
-  /* Log Out Button Styling */
-  .tab-navigation .logout-button {
-    background-color: #dc3545;
-    color: #fff;
-    border-radius: 5px;
-    padding: 8px 16px;
-    transition: background-color 0.3s ease;
-  }
-
-  .tab-navigation .logout-button:hover {
-    background-color: #c82333;
-  }
-
-  /* Content section styling */
   .tab-content {
+    width: 90%;
+    max-width: 800px;
     flex-grow: 1;
-    padding: 20px;
     overflow-y: auto;
     background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .tab-content.message-board-tab {
+    height: 70vh;
   }

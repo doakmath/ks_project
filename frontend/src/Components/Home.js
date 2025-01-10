@@ -6,13 +6,12 @@ import Resource from './Resource';
 import Sound from './Sound';
 import Video from './Video';
 import MessageBoard from './MessageBoard';
-import './Home.css'; // Optional CSS file for styling
+import './Home.css';
 
 function Home() {
   const { logout, isAuthenticated } = useAuth0();
   const [activeTab, setActiveTab] = useState('Lessons');
 
-  // Function to render the active tab's content
   const renderTabContent = () => {
     switch (activeTab) {
       case 'Lessons':
@@ -32,12 +31,8 @@ function Home() {
 
   return (
     <div className="home-container">
-      {/* Quote Modal at the top */}
-      <div className="quote-modal-content">
       <QuoteModal />
-      </div>
 
-      {/* Navigation Tabs */}
       <div className="tab-navigation">
         <button className={activeTab === 'Lessons' ? 'active' : ''} onClick={() => setActiveTab('Lessons')}>Lessons</button>
         <button className={activeTab === 'Videos' ? 'active' : ''} onClick={() => setActiveTab('Videos')}>Videos</button>
@@ -45,7 +40,6 @@ function Home() {
         <button className={activeTab === 'Resources' ? 'active' : ''} onClick={() => setActiveTab('Resources')}>Resources</button>
         <button className={activeTab === 'MessageBoard' ? 'active' : ''} onClick={() => setActiveTab('MessageBoard')}>Message Board</button>
 
-        {/* Log Out Button */}
         {isAuthenticated && (
           <button className="logout-button" onClick={() => logout({ returnTo: window.location.origin })}>
             Log Out
@@ -53,8 +47,7 @@ function Home() {
         )}
       </div>
 
-      {/* Render Active Tab Content */}
-      <div className="tab-content">
+      <div className={`tab-content ${activeTab === 'MessageBoard' ? 'message-board-tab' : ''}`}>
         {renderTabContent()}
       </div>
     </div>
