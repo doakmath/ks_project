@@ -33,7 +33,6 @@ function QuoteModal() {
 
   return (
     <div className="quote-modal" style={{ backgroundImage: `url(${randomImage.image_url})` }}>
-      <h1>quote modal -------------------------------------------</h1>
       <div className="quote-content">
         <h3>{randomQuote.quote}</h3>
       </div>

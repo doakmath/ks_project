@@ -55,11 +55,12 @@ function Lessons() {
       })
       .catch(error => console.error(error));
   };
-
+console.log("user: ", user)
   // Render the selected lesson or the list of lessons
   return (
     <div>
       <h1>Lessons</h1>
+      {user && <h2>{user.nickname}</h2>}
 
       {selectedLesson ? (
         <div>
@@ -83,7 +84,6 @@ function Lessons() {
                 {lesson.title}
               </h2>
               <p>
-                Complete?{" "}
                 {userProgress.some(progress => progress.lesson === lesson.id && progress.is_complete)
                   ? "✅ Completed"
                   : "❌ Not Completed"}
