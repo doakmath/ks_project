@@ -55,7 +55,7 @@ function Lessons() {
       })
       .catch(error => console.error(error));
   };
-console.log("user: ", user)
+
   // Render the selected lesson or the list of lessons
   return (
     <div>

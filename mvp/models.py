@@ -63,18 +63,22 @@ class Sound(models.Model):
 
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    nickname = models.CharField(max_length=100, null=True, blank=True)  # New field
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'{self.user.username}: {self.message[:30]}...'
+        return f'{self.nickname or self.user.username}: {self.message[:30]}...'
+
 
 
 class Reply(models.Model):
     comment = models.ForeignKey(Comment, related_name='replies', on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    nickname = models.CharField(max_length=100, null=True, blank=True)  # Added nickname field
     reply = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'Reply by {self.user.username}'
+        return f'Reply by {self.nickname or self.user.username}'
+

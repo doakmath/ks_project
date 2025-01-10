@@ -44,11 +44,31 @@ function MessageBoard() {
 
   // Handle new reply submission
   const handleReplySubmit = (commentId) => {
-    if (newReply.trim()) {
-      axios.post(`${process.env.REACT_APP_API_URL}reply/`, { comment: commentId, reply: newReply })
+    if (newReply.trim() && isAuthenticated && user) {
+      axios.post(`${process.env.REACT_APP_API_URL}reply/create/`, {
+        comment: commentId,
+        reply: newReply,
+        user_sub: user.sub,
+        nickname: user.nickname
+      })
         .then(response => {
-          setReplies([...replies, response.data]);
+          setReplies(prevReplies => {
+            const updatedReplies = [...prevReplies, response.data];
+            return updatedReplies;
+          });
           setNewReply('');
+          setSelectedCommentId(commentId);  // Ensure replies are visible immediately
+        })
+        .then(() => {
+          // Refetch replies for the specific comment to ensure consistency
+          axios.get(`${process.env.REACT_APP_API_URL}reply/?comment=${commentId}`)
+            .then(replyResponse => {
+              setReplies(prevReplies => {
+                const filteredReplies = prevReplies.filter(reply => reply.comment !== commentId);
+                const uniqueReplies = [...new Map([...filteredReplies, ...replyResponse.data].map(item => [item.id, item])).values()];
+                return uniqueReplies;
+              });
+            });
         })
         .catch(error => console.error(error));
     }
@@ -84,7 +104,7 @@ function MessageBoard() {
                 {replies.filter(reply => reply.comment === comment.id).map(reply => (
                   <li key={reply.id} className="reply-item">
                     <p>↪ {reply.reply}</p>
-                    <p>- {reply.user}</p>
+                    <p>- {reply.nickname || 'Anonymous'}</p>
                     <p>{new Date(reply.created_at).toLocaleString()}</p>
                   </li>
                 ))}

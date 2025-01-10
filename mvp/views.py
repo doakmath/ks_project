@@ -1,9 +1,11 @@
 from django.shortcuts import render
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from django.http import JsonResponse
 from rest_framework import status
 from django.contrib.auth.models import User
+
 
 from .models import (
     Lesson,
@@ -345,18 +347,55 @@ def sound_delete(request, pk):
 
 #                                   Comment endpoints
 
-@api_view(['GET'])
+@api_view(['GET', 'POST'])
 def comment_list(request):
-    comments = Comment.objects.all()
-    serializer = CommentSerializer(comments, many=True)
-    return Response(serializer.data)
+    if request.method == 'GET':
+        comments = Comment.objects.all()
+        serializer = CommentSerializer(comments, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        user_sub = request.data.get('user_sub')
+        try:
+            user = User.objects.get(username=user_sub)
+        except User.DoesNotExist:
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        data = request.data
+        data['user'] = user.id  # Associate the comment with the user
+
+        serializer = CommentSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 @api_view(['POST'])
 def comment_create(request):
-    serializer = CommentSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-    return Response(serializer.data)
+    user_sub = request.data.get('user_sub')
+    nickname = request.data.get('nickname')
+
+    try:
+        user = User.objects.get(username=user_sub)
+    except User.DoesNotExist:
+        return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    data = request.data
+    data['user'] = user.id
+
+    # Save nickname
+    comment = Comment.objects.create(
+        user=user,
+        nickname=nickname,
+        message=data['message']
+    )
+
+    serializer = CommentSerializer(comment)
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
 
 @api_view(['GET'])
 def comment_detail(request, pk):
@@ -388,11 +427,37 @@ def reply_list(request):
     return Response(serializer.data)
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def reply_create(request):
-    serializer = ReplySerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-    return Response(serializer.data)
+    user_sub = request.data.get('user_sub')
+    nickname = request.data.get('nickname')
+    comment_id = request.data.get('comment')
+    reply_text = request.data.get('reply')
+
+    if not comment_id or not reply_text:
+        return Response({"error": "Missing comment or reply text"}, status=400)
+
+    user, created = User.objects.get_or_create(username=user_sub, defaults={'first_name': nickname})
+
+    try:
+        comment = Comment.objects.get(id=comment_id)
+        reply = Reply.objects.create(
+            comment=comment,
+            user=user,
+            nickname=nickname,  # Save the nickname
+            reply=reply_text
+        )
+        return Response({"message": "Reply created successfully", "reply": {
+            "id": reply.id,
+            "comment": reply.comment.id,
+            "nickname": reply.nickname,
+            "reply": reply.reply,
+            "created_at": reply.created_at
+        }}, status=201)
+    except Comment.DoesNotExist:
+        return Response({"error": "Comment not found"}, status=404)
+
+
 
 @api_view(['GET'])
 def reply_detail(request, pk):

@@ -50,10 +50,12 @@ class SoundSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = ['id', 'user', 'message', 'created_at']
+        fields = ['id', 'user', 'nickname', 'message', 'created_at']
+
+
 
 # Reply Serializer
 class ReplySerializer(serializers.ModelSerializer):
     class Meta:
         model = Reply
-        fields = ['id', 'comment', 'user', 'reply', 'created_at']
+        fields = ['id', 'comment', 'user', 'reply', 'nickname', 'created_at']
