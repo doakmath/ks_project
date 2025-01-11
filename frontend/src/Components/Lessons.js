@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAuth0 } from '@auth0/auth0-react';
+import './Home.css';
 
 function Lessons() {
   const { user, isAuthenticated } = useAuth0();
@@ -56,17 +57,27 @@ function Lessons() {
       .catch(error => console.error(error));
   };
 
+  // Function to format lesson content for better readability
+  const formatLessonContent = (content) => {
+    return content.split('\n').map((line, index) => (
+      <p key={index} className="lesson-line" style={{ fontSize: '18px' }}>
+        {line.trim() ? line : <br />}
+      </p>
+    ));
+  };
+
   // Render the selected lesson or the list of lessons
   return (
-    <div>
+    <div className="home-container">
       <h1>Lessons</h1>
       {user && <h2>{user.nickname}</h2>}
 
       {selectedLesson ? (
-        <div>
+        <div className="tab-content">
+          <button onClick={() => setSelectedLesson(null)} style={{ marginBottom: '20px' }}>Back to Lessons</button>
           <h2>{selectedLesson.title}</h2>
-          <p>{selectedLesson.content}</p>
-          <label>
+          <div>{formatLessonContent(selectedLesson.content)}</div>
+          <label style={{ fontSize: '18px', display: 'block', marginBottom: '10px' }}>
             <input
               type="checkbox"
               checked={userProgress.some(progress => progress.lesson === selectedLesson.id && progress.is_complete)}
@@ -74,12 +85,12 @@ function Lessons() {
             />
             Mark as Complete
           </label>
-          <button onClick={() => setSelectedLesson(null)}>Back to Lessons</button>
+          <button onClick={() => setSelectedLesson(null)} style={{ marginTop: '10px' }}>Back to Lessons</button>
         </div>
       ) : (
         <ul>
           {lessons.map(lesson => (
-            <li key={lesson.id}>
+            <li key={lesson.id} className="lesson-item">
               <h2 onClick={() => setSelectedLesson(lesson)} style={{ cursor: 'pointer' }}>
                 {lesson.title}
               </h2>

@@ -36,7 +36,7 @@ class Image(models.Model):
 
 class Resource(models.Model):
     title = models.CharField(max_length=255)
-    link = models.URLField()
+    link = models.URLField(null=True, blank=True)
     description = models.TextField(blank=True, null=True)
 
     def __str__(self):
@@ -81,4 +81,3 @@ class Reply(models.Model):
 
     def __str__(self):
         return f'Reply by {self.nickname or self.user.username}'
-
