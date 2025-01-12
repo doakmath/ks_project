@@ -63,7 +63,8 @@ function MessageBoard() {
           user_sub: user.sub,
           nickname: user.nickname
         });
-        setReplies(prevReplies => [...prevReplies, response.data]);
+        const updatedReplies = [...replies, response.data];
+        setReplies(updatedReplies);
         setNewReply('');
         setSelectedCommentId(commentId);
       } catch (error) {
