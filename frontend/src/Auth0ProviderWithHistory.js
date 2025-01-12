@@ -35,7 +35,7 @@ const Auth0ProviderWithHistory = ({ children }) => {
       domain={authConfig.auth0_domain}
       clientId={authConfig.auth0_client_id}
       authorizationParams={{
-        redirect_uri: window.location.origin
+        redirect_uri: window.location.origin + '/home'
       }}
     >
       {children}

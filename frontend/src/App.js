@@ -17,7 +17,7 @@ function App() {
   return (
     <div className="app-container">
       <Routes>
-        <Route path="/" element={isAuthenticated ? <Navigate to="/home" /> : <Navigate to="/login" />} />
+        <Route path="/" element={<Navigate to={isAuthenticated ? "/home" : "/login"} />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/home" element={<Home />} />
         <Route path="/lessons" element={<Lessons />} />
