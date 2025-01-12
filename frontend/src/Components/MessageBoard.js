@@ -71,14 +71,9 @@ function MessageBoard() {
           [...prevReplies, response.data].sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
         );
 
-        // Update the selected comment to show the new reply immediately
-        setComments(prevComments =>
-          prevComments.map(comment =>
-            comment.id === commentId
-              ? { ...comment, replies: [...(comment.replies || []), response.data] }
-              : comment
-          )
-        );
+        // Refresh the selected comment to trigger a re-render of the replies
+        setSelectedCommentId(null);
+        setTimeout(() => setSelectedCommentId(commentId), 0);
 
         setNewReply('');
       } catch (error) {
