@@ -116,7 +116,7 @@ function MessageBoard() {
                   <ul className="replies-list">
                     {replies.filter(reply => reply.comment === comment.id).map(reply => (
                       <li key={reply.id} className="reply-item">
-                        <p>↪ {reply.reply}</p>
+                        <p>↪ {typeof reply.reply === 'string' ? reply.reply : JSON.stringify(reply.reply)}</p>
                         <p>- {reply.nickname || 'Anonymous'}</p>
                         <p>{new Date(reply.created_at).toLocaleString()}</p>
                       </li>
