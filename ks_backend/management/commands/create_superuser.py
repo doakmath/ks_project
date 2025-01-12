@@ -5,12 +5,16 @@ class Command(BaseCommand):
     help = "Create a superuser"
 
     def handle(self, *args, **kwargs):
-        if not User.objects.filter(username="admin").exists():
+        username = "admin"
+        email = "admin@example.com"
+        password = "admin123"
+
+        if not User.objects.filter(username=username).exists():
             User.objects.create_superuser(
-                username="admin",
-                email="admin@example.com",
-                password="admin123"
+                username=username,
+                email=email,
+                password=password
             )
-            self.stdout.write(self.style.SUCCESS("Superuser created successfully!"))
+            self.stdout.write(self.style.SUCCESS(f"Superuser '{username}' created successfully!"))
         else:
-            self.stdout.write(self.style.WARNING("Superuser already exists."))
+            self.stdout.write(self.style.WARNING(f"Superuser '{username}' already exists."))
