@@ -3,12 +3,30 @@ import axios from 'axios';
 
 function Video() {
   const [video, setVideo] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
+    setLoading(true);
     axios.get(`${process.env.REACT_APP_API_URL}video/`)
-      .then(response => setVideo(response.data))
-      .catch(error => console.error(error));
+      .then(response => {
+        setVideo(response.data);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error(error);
+        setError('Failed to load videos. Please try again later.');
+        setLoading(false);
+      });
   }, []);
+
+  if (loading) {
+    return <p>Loading videos...</p>;
+  }
+
+  if (error) {
+    return <p className="error-message">{error}</p>;
+  }
 
   return (
     <div>

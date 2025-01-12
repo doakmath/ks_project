@@ -6,9 +6,11 @@ import Auth0ProviderWithHistory from './Auth0ProviderWithHistory';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <BrowserRouter>
-    <Auth0ProviderWithHistory>
-      <App />
-    </Auth0ProviderWithHistory>
-  </BrowserRouter>
+  <React.StrictMode>
+    <BrowserRouter>
+      <Auth0ProviderWithHistory>
+        <App />
+      </Auth0ProviderWithHistory>
+    </BrowserRouter>
+  </React.StrictMode>
 );

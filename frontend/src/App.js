@@ -8,20 +8,22 @@ import LoginPage from './Components/LoginPage.js';
 import Home from './Components/Home.js';
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import './App.css'
+import './App.css';
 
 function App() {
   return (
-        <Routes>
-          <Route path="/" element={<LoginPage />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/lessons" element={<Lessons />} />
-          <Route path="/comment" element={<Comment />} />
-          <Route path="/resource" element={<Resource />} />
-          <Route path="/sound" element={<Sound />} />
-          <Route path="/video" element={<Video />} />
-          <Route path="/quotes" element={<Quotes />} />
-        </Routes>
+    <div className="app-container">
+      <Routes>
+        <Route path="/" element={<LoginPage />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/lessons" element={<Lessons />} />
+        <Route path="/comment" element={<Comment />} />
+        <Route path="/resource" element={<Resource />} />
+        <Route path="/sound" element={<Sound />} />
+        <Route path="/video" element={<Video />} />
+        <Route path="/quotes" element={<Quotes />} />
+      </Routes>
+    </div>
   );
 }
 

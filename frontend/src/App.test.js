@@ -1,8 +1,9 @@
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
-test('renders learn react link', () => {
+// Updated test to check if LoginPage renders correctly
+test('renders LoginPage welcome message', () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+  const welcomeElement = screen.getByText(/welcome to KS App/i);
+  expect(welcomeElement).toBeInTheDocument();
 });

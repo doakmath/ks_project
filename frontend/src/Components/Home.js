@@ -11,21 +11,28 @@ import './Home.css';
 function Home() {
   const { logout, isAuthenticated } = useAuth0();
   const [activeTab, setActiveTab] = useState('Lessons');
+  const [error, setError] = useState(null);
 
+  // Function to handle tab rendering with error boundary
   const renderTabContent = () => {
-    switch (activeTab) {
-      case 'Lessons':
-        return <Lessons />;
-      case 'Videos':
-        return <Video />;
-      case 'Sound':
-        return <Sound />;
-      case 'Resources':
-        return <Resource />;
-      case 'MessageBoard':
-        return <MessageBoard />;
-      default:
-        return <Lessons />;
+    try {
+      switch (activeTab) {
+        case 'Lessons':
+          return <Lessons />;
+        case 'Videos':
+          return <Video />;
+        case 'Sound':
+          return <Sound />;
+        case 'Resources':
+          return <Resource />;
+        case 'MessageBoard':
+          return <MessageBoard />;
+        default:
+          return <Lessons />;
+      }
+    } catch (err) {
+      setError('Failed to load the tab content. Please try again later.');
+      return <p className="error-message">{error}</p>;
     }
   };
 
@@ -48,7 +55,7 @@ function Home() {
       </div>
 
       <div className={`tab-content ${activeTab === 'MessageBoard' ? 'message-board-tab' : ''}`}>
-        {renderTabContent()}
+        {error ? <p className="error-message">{error}</p> : renderTabContent()}
       </div>
     </div>
   );

@@ -3,11 +3,21 @@ import axios from 'axios';
 
 function Sound() {
   const [sound, setSound] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
+    setLoading(true);
     axios.get(`${process.env.REACT_APP_API_URL}sound/`)
-      .then(response => setSound(response.data))
-      .catch(error => console.error(error));
+      .then(response => {
+        setSound(response.data);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error(error);
+        setError('Failed to load sounds. Please try again later.');
+        setLoading(false);
+      });
   }, []);
 
   // Function to convert Freesound URLs to iframe embed links
@@ -18,6 +28,14 @@ function Sound() {
     }
     return null;
   };
+
+  if (loading) {
+    return <p>Loading sounds...</p>;
+  }
+
+  if (error) {
+    return <p className="error-message">{error}</p>;
+  }
 
   return (
     <div>

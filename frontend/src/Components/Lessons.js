@@ -8,6 +8,8 @@ function Lessons() {
   const [lessons, setLessons] = useState([]);
   const [userProgress, setUserProgress] = useState([]);
   const [selectedLesson, setSelectedLesson] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // Fetch lessons and user progress
   useEffect(() => {
@@ -24,10 +26,19 @@ function Lessons() {
             .then(response => {
               setLessons(response.data.lessons);
               setUserProgress(response.data.progress);
+              setLoading(false);
             })
-            .catch(error => console.error(error));
+            .catch(error => {
+              console.error(error);
+              setError('Failed to load lessons. Please try again later.');
+              setLoading(false);
+            });
         })
-        .catch(error => console.error(error));
+        .catch(error => {
+          console.error(error);
+          setError('Failed to sync user data. Please try again later.');
+          setLoading(false);
+        });
     }
   }, [isAuthenticated, user]);
 
@@ -54,7 +65,10 @@ function Lessons() {
           p.id === progress.id ? response.data : p
         ));
       })
-      .catch(error => console.error(error));
+      .catch(error => {
+        console.error(error);
+        setError('Failed to update progress. Please try again later.');
+      });
   };
 
   // Function to format lesson content for better readability
@@ -72,7 +86,11 @@ function Lessons() {
       <h1>Lessons</h1>
       {user && <h2>{user.nickname}</h2>}
 
-      {selectedLesson ? (
+      {error && <p className="error-message">{error}</p>}
+
+      {loading ? (
+        <p>Loading lessons...</p>
+      ) : selectedLesson ? (
         <div className="tab-content">
           <button onClick={() => setSelectedLesson(null)} style={{ marginBottom: '20px' }}>Back to Lessons</button>
           <h2>{selectedLesson.title}</h2>

@@ -7,8 +7,11 @@ function QuoteModal() {
   const [images, setImages] = useState([]);
   const [randomQuote, setRandomQuote] = useState(null);
   const [randomImage, setRandomImage] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
+    setLoading(true);
     Promise.all([
       axios.get(`${process.env.REACT_APP_API_URL}quotes/`),
       axios.get(`${process.env.REACT_APP_API_URL}image/`)
@@ -17,16 +20,30 @@ function QuoteModal() {
         setQuotes(quotesResponse.data);
         setImages(imagesResponse.data);
 
-        const randomQuoteIndex = Math.floor(Math.random() * quotesResponse.data.length);
-        const randomImageIndex = Math.floor(Math.random() * imagesResponse.data.length);
-        setRandomQuote(quotesResponse.data[randomQuoteIndex]);
-        setRandomImage(imagesResponse.data[randomImageIndex]);
+        if (quotesResponse.data.length > 0 && imagesResponse.data.length > 0) {
+          const randomQuoteIndex = Math.floor(Math.random() * quotesResponse.data.length);
+          const randomImageIndex = Math.floor(Math.random() * imagesResponse.data.length);
+          setRandomQuote(quotesResponse.data[randomQuoteIndex]);
+          setRandomImage(imagesResponse.data[randomImageIndex]);
+        } else {
+          setError('No quotes or images available.');
+        }
+
+        setLoading(false);
       })
-      .catch(error => console.error(error));
+      .catch(error => {
+        console.error(error);
+        setError('Failed to load quotes or images. Please try again later.');
+        setLoading(false);
+      });
   }, []);
 
-  if (!randomQuote || !randomImage) {
+  if (loading) {
     return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="error-message">{error}</div>;
   }
 
   return (
@@ -40,3 +57,4 @@ function QuoteModal() {
 }
 
 export default QuoteModal;
+

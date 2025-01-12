@@ -5,12 +5,22 @@ import './Home.css';
 function Resource() {
   const [resources, setResources] = useState([]);
   const [selectedResource, setSelectedResource] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // Fetch resources from the API
   useEffect(() => {
+    setLoading(true);
     axios.get(`${process.env.REACT_APP_API_URL}resource/`)
-      .then(response => setResources(response.data))
-      .catch(error => console.error(error));
+      .then(response => {
+        setResources(response.data);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error(error);
+        setError('Failed to load resources. Please try again later.');
+        setLoading(false);
+      });
   }, []);
 
   // Function to handle selecting/deselecting a resource
@@ -36,7 +46,11 @@ function Resource() {
     <div className="home-container">
       <h1>Resources</h1>
 
-      {selectedResource ? (
+      {error && <p className="error-message">{error}</p>}
+
+      {loading ? (
+        <p>Loading resources...</p>
+      ) : selectedResource ? (
         <div className="tab-content">
           <h2 onClick={() => setSelectedResource(null)} style={{ cursor: 'pointer', color: '#007bff', textDecoration: 'underline' }}>{selectedResource.title}</h2>
           {selectedResource.description && formatDescription(selectedResource.description)}

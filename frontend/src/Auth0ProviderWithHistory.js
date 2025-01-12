@@ -6,7 +6,11 @@ const Auth0ProviderWithHistory = ({ children }) => {
   const navigate = useNavigate();
 
   const onRedirectCallback = (appState) => {
-    navigate(appState?.returnTo || '/home');
+    try {
+      navigate(appState?.returnTo || '/home');
+    } catch (error) {
+      console.error('Navigation error:', error);
+    }
   };
 
   return (
