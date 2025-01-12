@@ -14,8 +14,8 @@ function Lessons() {
 
   // Fetch lessons and user progress
   useEffect(() => {
-    if (isAuthenticated && user) {
-      axios.post(`${API_URL}sync_user/`, {
+    if (isAuthenticated) {
+      axios.post(`${API_URL}/sync_user/`, {
         sub: user.sub,
         email: user.email,
       })
@@ -23,7 +23,7 @@ function Lessons() {
           const userId = response.data.id;
 
           // Use GET method to fetch lessons and progress
-          axios.get(`${API_URL}progress/${userId}/`)
+          axios.get(`${API_URL}/progress/${userId}/`)
             .then(response => {
               setLessons(response.data.lessons);
               setUserProgress(response.data.progress);
@@ -45,31 +45,32 @@ function Lessons() {
 
   // Function to toggle completion status of a lesson
   const toggleCompletion = (lessonId) => {
-    const progress = userProgress.find(progress => progress.lesson === lessonId);
+    let progress = userProgress.find(progress => progress.lesson === lessonId);
 
     if (!progress) {
-      console.error('Progress not found for this lesson');
-      return;
+      // Create a new progress record if not found
+      progress = { lesson: lessonId, is_complete: true };
+      axios.post(`${API_URL}/progress/`, progress)
+        .then(response => {
+          setUserProgress([...userProgress, response.data]);
+        })
+        .catch(error => {
+          console.error(error);
+          setError('Failed to update progress. Please try again later.');
+        });
+    } else {
+      // Toggle existing progress
+      const updatedProgress = { ...progress, is_complete: !progress.is_complete };
+
+      axios.put(`${API_URL}/progress/update/${progress.id}/`, updatedProgress)
+        .then(response => {
+          setUserProgress(userProgress.map(p => (p.id === progress.id ? response.data : p)));
+        })
+        .catch(error => {
+          console.error(error);
+          setError('Failed to update progress. Please try again later.');
+        });
     }
-
-    // Toggle the completion status
-    const updatedProgress = {
-      ...progress,
-      is_complete: !progress.is_complete,
-    };
-
-    // Use PUT method to update progress in the backend
-    axios.put(`${API_URL}progress/update/${progress.id}/`, updatedProgress)
-      .then(response => {
-        // Update the state to reflect the changes
-        setUserProgress(userProgress.map(p =>
-          p.id === progress.id ? response.data : p
-        ));
-      })
-      .catch(error => {
-        console.error(error);
-        setError('Failed to update progress. Please try again later.');
-      });
   };
 
   // Function to format lesson content for better readability
@@ -95,7 +96,7 @@ function Lessons() {
         <div className="tab-content">
           <button onClick={() => setSelectedLesson(null)} style={{ marginBottom: '20px' }}>Back to Lessons</button>
           <h2>{selectedLesson.title}</h2>
-          <div>{formatLessonContent(selectedLesson.content)}</div>
+          <div>{selectedLesson?.content && formatLessonContent(selectedLesson.content)}</div>
           <label style={{ fontSize: '18px', display: 'block', marginBottom: '10px' }}>
             <input
               type="checkbox"

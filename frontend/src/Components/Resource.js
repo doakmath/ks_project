@@ -12,7 +12,7 @@ function Resource() {
   // Fetch resources from the API
   useEffect(() => {
     setLoading(true);
-    axios.get(`${API_URL}resource/`)
+    axios.get(`${API_URL}/resource/`)
       .then(response => {
         setResources(response.data);
         setLoading(false);

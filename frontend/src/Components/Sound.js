@@ -9,7 +9,7 @@ function Sound() {
 
   useEffect(() => {
     setLoading(true);
-    axios.get(`${API_URL}sound/`)
+    axios.get(`${API_URL}/sound/`)
       .then(response => {
         setSound(response.data);
         setLoading(false);

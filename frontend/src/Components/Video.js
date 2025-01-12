@@ -37,7 +37,7 @@ function Video() {
           <li key={vid.id}>
             <h2>{vid.title}</h2>
             <p>{vid.description}</p>
-            {vid.video_url && (
+            {vid.video_url ? (
               <iframe
                 width="560"
                 height="315"
@@ -47,6 +47,8 @@ function Video() {
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
               ></iframe>
+            ) : (
+              <p>No video available.</p>
             )}
           </li>
         ))}

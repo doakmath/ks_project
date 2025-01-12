@@ -4,7 +4,6 @@ import axios from 'axios';
 import './MessageBoard.css';
 import API_URL from '../config';
 
-
 function MessageBoard() {
   const { user, isAuthenticated } = useAuth0();
   const [comments, setComments] = useState([]);
@@ -23,7 +22,6 @@ function MessageBoard() {
       axios.get(`${API_URL}reply/`)
     ])
       .then(([commentsResponse, repliesResponse]) => {
-        // Sort comments in reverse order to display the most recent first
         setComments(commentsResponse.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)));
         setReplies(repliesResponse.data);
         setLoading(false);
@@ -36,57 +34,40 @@ function MessageBoard() {
   }, []);
 
   // Handle new comment submission
-  const handleCommentSubmit = () => {
+  const handleCommentSubmit = async () => {
     if (newComment.trim() && isAuthenticated && user) {
-      axios.post(`${API_URL}comment/`, {
-        message: newComment,
-        user_sub: user.sub, // Send the user's sub from Auth0
-        nickname: user.nickname, // Include the nickname
-      })
-        .then(response => {
-          // Prepend the new comment to the comments array
-          setComments([response.data, ...comments]);
-          setNewComment('');
-        })
-        .catch(error => {
-          console.error(error);
-          setError('Failed to post comment. Please try again later.');
+      try {
+        const response = await axios.post(`${API_URL}comment/`, {
+          message: newComment,
+          user_sub: user.sub,
+          nickname: user.nickname,
         });
+        setComments([response.data, ...comments]);
+        setNewComment('');
+      } catch (error) {
+        console.error(error);
+        setError('Failed to post comment. Please try again later.');
+      }
     }
   };
 
   // Handle new reply submission
-  const handleReplySubmit = (commentId) => {
+  const handleReplySubmit = async (commentId) => {
     if (newReply.trim() && isAuthenticated && user) {
-      axios.post(`${API_URL}reply/create/`, {
-        comment: commentId,
-        reply: newReply,
-        user_sub: user.sub,
-        nickname: user.nickname
-      })
-        .then(response => {
-          setReplies(prevReplies => {
-            const updatedReplies = [...prevReplies, response.data];
-            return updatedReplies;
-          });
-          setNewReply('');
-          setSelectedCommentId(commentId);  // Ensure replies are visible immediately
-        })
-        .then(() => {
-          // Refetch replies for the specific comment to ensure consistency
-          axios.get(`${API_URL}reply/?comment=${commentId}`)
-            .then(replyResponse => {
-              setReplies(prevReplies => {
-                const filteredReplies = prevReplies.filter(reply => reply.comment !== commentId);
-                const uniqueReplies = [...new Map([...filteredReplies, ...replyResponse.data].map(item => [item.id, item])).values()];
-                return uniqueReplies;
-              });
-            });
-        })
-        .catch(error => {
-          console.error(error);
-          setError('Failed to post reply. Please try again later.');
+      try {
+        const response = await axios.post(`${API_URL}reply/create/`, {
+          comment: commentId,
+          reply: newReply,
+          user_sub: user.sub,
+          nickname: user.nickname
         });
+        setReplies([...replies, response.data]);
+        setNewReply('');
+        setSelectedCommentId(commentId);
+      } catch (error) {
+        console.error(error);
+        setError('Failed to post reply. Please try again later.');
+      }
     }
   };
 
@@ -116,11 +97,13 @@ function MessageBoard() {
                 <h2>{comment.nickname || 'Anonymous'}</h2>
                 <p>{comment.message}</p>
                 <p>{new Date(comment.created_at).toLocaleString()}</p>
-                <p className="reply-count" onClick={() => setSelectedCommentId(comment.id === selectedCommentId ? null : comment.id)}>
+                <p
+                  className="reply-count"
+                  onClick={() => setSelectedCommentId(comment.id === selectedCommentId ? null : comment.id)}
+                >
                   {replies.filter(reply => reply.comment === comment.id).length} Replies
                 </p>
 
-                {/* Show replies if selected */}
                 {selectedCommentId === comment.id && (
                   <ul className="replies-list">
                     {replies.filter(reply => reply.comment === comment.id).map(reply => (

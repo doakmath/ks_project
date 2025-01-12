@@ -34,8 +34,8 @@ function LoginPage() {
         </>
       ) : (
         <>
-          <h1>Welcome, {user.name}!</h1>
-          <p>Email: {user.email}</p>
+          <h1>Welcome, {user?.name || 'User'}!</h1>
+          <p>Email: {user?.email || 'N/A'}</p>
           <button style={styles.button} onClick={handleLogout}>Log Out</button>
         </>
       )}

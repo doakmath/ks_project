@@ -8,13 +8,16 @@ import LoginPage from './Components/LoginPage.js';
 import Home from './Components/Home.js';
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
+import { useAuth0 } from '@auth0/auth0-react';
 import './App.css';
 
 function App() {
+  const { isAuthenticated } = useAuth0();
+
   return (
     <div className="app-container">
       <Routes>
-        <Route path="/" element={<Navigate to="/home" />} />  {/* Redirect default route */}
+        <Route path="/" element={isAuthenticated ? <Navigate to="/home" /> : <Navigate to="/login" />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/home" element={<Home />} />
         <Route path="/lessons" element={<Lessons />} />

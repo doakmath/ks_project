@@ -12,8 +12,8 @@ function QuoteModal() {
   useEffect(() => {
     setLoading(true);
     Promise.all([
-      axios.get(`${API_URL}quotes/`),
-      axios.get(`${API_URL}image/`)
+      axios.get(`${API_URL}/quotes/`),
+      axios.get(`${API_URL}/image/`)
     ])
       .then(([quotesResponse, imagesResponse]) => {
         if (quotesResponse.data.length > 0 && imagesResponse.data.length > 0) {
@@ -27,7 +27,7 @@ function QuoteModal() {
         setLoading(false);
       })
       .catch(error => {
-        console.error(error);
+        console.error('Failed to load quotes or images:', error);
         setError('Failed to load quotes or images. Please try again later.');
         setLoading(false);
       });
