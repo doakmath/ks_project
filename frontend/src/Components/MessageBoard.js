@@ -61,10 +61,15 @@ function MessageBoard() {
           comment: commentId,
           reply: newReply,
           user_sub: user.sub,
-          nickname: user.nickname
+          nickname: user.nickname,
         });
-        const updatedReplies = [...replies, response.data];
-        setReplies(updatedReplies);
+
+        // Update the replies state immediately after posting a reply
+        setReplies((prevReplies) => [
+          ...prevReplies,
+          { ...response.data, comment: commentId }
+        ]);
+
         setNewReply('');
         setSelectedCommentId(commentId);
       } catch (error) {
