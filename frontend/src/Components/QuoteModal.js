@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './QuoteModal.css';
+import API_URL from '../config';
 
 function QuoteModal() {
   const [quotes, setQuotes] = useState([]);
@@ -13,8 +14,8 @@ function QuoteModal() {
   useEffect(() => {
     setLoading(true);
     Promise.all([
-      axios.get(`${process.env.REACT_APP_API_URL}quotes/`),
-      axios.get(`${process.env.REACT_APP_API_URL}image/`)
+      axios.get(`${API_URL}quotes/`),
+      axios.get(`${API_URL}image/`)
     ])
       .then(([quotesResponse, imagesResponse]) => {
         setQuotes(quotesResponse.data);
@@ -57,4 +58,3 @@ function QuoteModal() {
 }
 
 export default QuoteModal;
-

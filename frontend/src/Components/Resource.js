@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './Home.css';
+import API_URL from '../config';
 
 function Resource() {
   const [resources, setResources] = useState([]);
@@ -11,7 +12,7 @@ function Resource() {
   // Fetch resources from the API
   useEffect(() => {
     setLoading(true);
-    axios.get(`${process.env.REACT_APP_API_URL}resource/`)
+    axios.get(`${API_URL}resource/`)
       .then(response => {
         setResources(response.data);
         setLoading(false);

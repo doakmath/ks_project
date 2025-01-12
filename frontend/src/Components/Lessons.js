@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAuth0 } from '@auth0/auth0-react';
 import './Home.css';
+import API_URL from '../config';
 
 function Lessons() {
   const { user, isAuthenticated } = useAuth0();
@@ -14,7 +15,7 @@ function Lessons() {
   // Fetch lessons and user progress
   useEffect(() => {
     if (isAuthenticated && user) {
-      axios.post(`${process.env.REACT_APP_API_URL}sync_user/`, {
+      axios.post(`${API_URL}sync_user/`, {
         sub: user.sub,
         email: user.email,
       })
@@ -22,7 +23,7 @@ function Lessons() {
           const userId = response.data.id;
 
           // Use GET method to fetch lessons and progress
-          axios.get(`${process.env.REACT_APP_API_URL}progress/${userId}/`)
+          axios.get(`${API_URL}progress/${userId}/`)
             .then(response => {
               setLessons(response.data.lessons);
               setUserProgress(response.data.progress);
@@ -58,7 +59,7 @@ function Lessons() {
     };
 
     // Use PUT method to update progress in the backend
-    axios.put(`${process.env.REACT_APP_API_URL}progress/update/${progress.id}/`, updatedProgress)
+    axios.put(`${API_URL}progress/update/${progress.id}/`, updatedProgress)
       .then(response => {
         // Update the state to reflect the changes
         setUserProgress(userProgress.map(p =>

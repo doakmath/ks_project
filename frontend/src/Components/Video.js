@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import API_URL from '../config';
 
 function Video() {
   const [video, setVideo] = useState([]);
@@ -8,7 +9,7 @@ function Video() {
 
   useEffect(() => {
     setLoading(true);
-    axios.get(`${process.env.REACT_APP_API_URL}video/`)
+    axios.get(`${API_URL}video/`)
       .then(response => {
         setVideo(response.data);
         setLoading(false);

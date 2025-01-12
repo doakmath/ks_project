@@ -2,6 +2,8 @@ import { useAuth0 } from '@auth0/auth0-react';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './MessageBoard.css';
+import API_URL from '../config';
+
 
 function MessageBoard() {
   const { user, isAuthenticated } = useAuth0();
@@ -17,8 +19,8 @@ function MessageBoard() {
   useEffect(() => {
     setLoading(true);
     Promise.all([
-      axios.get(`${process.env.REACT_APP_API_URL}comment/`),
-      axios.get(`${process.env.REACT_APP_API_URL}reply/`)
+      axios.get(`${API_URL}comment/`),
+      axios.get(`${API_URL}reply/`)
     ])
       .then(([commentsResponse, repliesResponse]) => {
         // Sort comments in reverse order to display the most recent first
@@ -36,7 +38,7 @@ function MessageBoard() {
   // Handle new comment submission
   const handleCommentSubmit = () => {
     if (newComment.trim() && isAuthenticated && user) {
-      axios.post(`${process.env.REACT_APP_API_URL}comment/`, {
+      axios.post(`${API_URL}comment/`, {
         message: newComment,
         user_sub: user.sub, // Send the user's sub from Auth0
         nickname: user.nickname, // Include the nickname
@@ -56,7 +58,7 @@ function MessageBoard() {
   // Handle new reply submission
   const handleReplySubmit = (commentId) => {
     if (newReply.trim() && isAuthenticated && user) {
-      axios.post(`${process.env.REACT_APP_API_URL}reply/create/`, {
+      axios.post(`${API_URL}reply/create/`, {
         comment: commentId,
         reply: newReply,
         user_sub: user.sub,
@@ -72,7 +74,7 @@ function MessageBoard() {
         })
         .then(() => {
           // Refetch replies for the specific comment to ensure consistency
-          axios.get(`${process.env.REACT_APP_API_URL}reply/?comment=${commentId}`)
+          axios.get(`${API_URL}reply/?comment=${commentId}`)
             .then(replyResponse => {
               setReplies(prevReplies => {
                 const filteredReplies = prevReplies.filter(reply => reply.comment !== commentId);

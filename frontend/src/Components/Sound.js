@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import API_URL from '../config';
 
 function Sound() {
   const [sound, setSound] = useState([]);
@@ -8,7 +9,7 @@ function Sound() {
 
   useEffect(() => {
     setLoading(true);
-    axios.get(`${process.env.REACT_APP_API_URL}sound/`)
+    axios.get(`${API_URL}sound/`)
       .then(response => {
         setSound(response.data);
         setLoading(false);
