@@ -65,10 +65,15 @@ function MessageBoard() {
         });
 
         // Update the replies state immediately after posting a reply
-        setReplies((prevReplies) => [
-          ...prevReplies,
-          { id: response.data.id, comment: commentId, nickname: response.data.nickname, reply: response.data.reply, created_at: response.data.created_at }
-        ]);
+        setReplies((prevReplies) => {
+          const updatedReplies = [...prevReplies, response.data];
+          return updatedReplies.map(reply => {
+            if (typeof reply === 'string') {
+              return JSON.parse(reply);
+            }
+            return reply;
+          });
+        });
 
         setNewReply('');
         setSelectedCommentId(commentId);
@@ -116,7 +121,7 @@ function MessageBoard() {
                   <ul className="replies-list">
                     {replies.filter(reply => reply.comment === comment.id).map(reply => (
                       <li key={reply.id} className="reply-item">
-                        <p>↪ {typeof reply.reply === 'string' ? reply.reply : JSON.stringify(reply.reply)}</p>
+                        <p>↪ {reply.reply}</p>
                         <p>- {reply.nickname || 'Anonymous'}</p>
                         <p>{new Date(reply.created_at).toLocaleString()}</p>
                       </li>
