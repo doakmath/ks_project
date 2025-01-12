@@ -4,8 +4,6 @@ import './QuoteModal.css';
 import API_URL from '../config';
 
 function QuoteModal() {
-  const [quotes, setQuotes] = useState([]);
-  const [images, setImages] = useState([]);
   const [randomQuote, setRandomQuote] = useState(null);
   const [randomImage, setRandomImage] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -18,9 +16,6 @@ function QuoteModal() {
       axios.get(`${API_URL}image/`)
     ])
       .then(([quotesResponse, imagesResponse]) => {
-        setQuotes(quotesResponse.data);
-        setImages(imagesResponse.data);
-
         if (quotesResponse.data.length > 0 && imagesResponse.data.length > 0) {
           const randomQuoteIndex = Math.floor(Math.random() * quotesResponse.data.length);
           const randomImageIndex = Math.floor(Math.random() * imagesResponse.data.length);
@@ -29,7 +24,6 @@ function QuoteModal() {
         } else {
           setError('No quotes or images available.');
         }
-
         setLoading(false);
       })
       .catch(error => {
@@ -50,8 +44,8 @@ function QuoteModal() {
   return (
     <div className="quote-modal">
       <div className="quote-modal-content">
-        <img src={randomImage.image_url} alt="Random" className="quote-image" />
-        <h3 className="quote-text">{randomQuote.quote}</h3>
+        {randomImage && <img src={randomImage.image_url} alt="Random" className="quote-image" />}
+        {randomQuote && <h3 className="quote-text">{randomQuote.quote}</h3>}
       </div>
     </div>
   );

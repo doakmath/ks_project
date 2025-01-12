@@ -54,6 +54,7 @@ function Sound() {
                 src={getFreesoundEmbedLink(soun.sound_url)}
                 width="920"
                 height="245"
+                title={soun.title} // Adding a unique title attribute
               ></iframe>
             ) : (
               <audio controls>
