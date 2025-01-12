@@ -39,7 +39,10 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['ks-project.onrender.com', '.auth0.com', 'localhost']
 
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    "https://zesty-blini-1594ea.netlify.app",
+]
+
 
 
 

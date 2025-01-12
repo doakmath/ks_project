@@ -9,7 +9,8 @@ from .models import (
     Video,
     Sound,
     Comment,
-    Reply
+    Reply,
+    Quotes,
 )
 
 # Inline class to display lesson progress within the user page
@@ -40,3 +41,4 @@ admin.site.register(Video)
 admin.site.register(Sound)
 admin.site.register(Comment)
 admin.site.register(Reply)
+admin.site.register(Quotes)
