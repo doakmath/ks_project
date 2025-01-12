@@ -55,4 +55,6 @@ urlpatterns = [
     path('reply/<int:pk>/delete/', views.reply_delete, name='reply_delete'),
     # Sync user endpoints
     path('sync_user/', views.sync_user, name='sync_user'),
+    # Create superuser endpoint
+    path('create-superuser/', views.create_superuser, name='create_superuser'),
 ]

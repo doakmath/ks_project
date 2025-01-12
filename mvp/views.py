@@ -568,3 +568,22 @@ def sync_user(request):
         return JsonResponse({'id': user.id, 'created': created})
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+#                                 Superuser creation endpoint
+@api_view(['POST'])
+def create_superuser(request):
+    if request.method == 'POST':
+        username = request.data.get('username')
+        email = request.data.get('email')
+        password = request.data.get('password')
+
+        if not username or not email or not password:
+            return Response({'error': 'All fields are required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if User.objects.filter(username=username).exists():
+            return Response({'error': 'User already exists'}, status=status.HTTP_400_BAD_REQUEST)
+
+        User.objects.create_superuser(username=username, email=email, password=password)
+        return Response({'success': 'Superuser created successfully'}, status=status.HTTP_201_CREATED)
