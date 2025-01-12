@@ -63,8 +63,9 @@ function MessageBoard() {
           user_sub: user.sub,
           nickname: user.nickname
         });
-        setReplies([...replies, response.data]);
+        setReplies(prevReplies => [...prevReplies, response.data]);
         setNewReply('');
+        setSelectedCommentId(commentId);
       } catch (error) {
         console.error(error);
         setError('Failed to post reply. Please try again later.');
