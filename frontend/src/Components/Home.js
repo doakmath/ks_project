@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import QuoteModal from './QuoteModal';
 import Lessons from './Lessons';
@@ -10,8 +10,13 @@ import './Home.css';
 
 function Home() {
   const { logout, isAuthenticated } = useAuth0();
-  const [activeTab, setActiveTab] = useState('Lessons');
+  const [activeTab, setActiveTab] = useState(localStorage.getItem('activeTab') || 'Lessons');
   const [error, setError] = useState(null);
+
+  // Store tab selection in localStorage
+  useEffect(() => {
+    localStorage.setItem('activeTab', activeTab);
+  }, [activeTab]);
 
   // Function to handle tab rendering with error boundary
   const renderTabContent = () => {
