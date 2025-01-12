@@ -1,56 +1,147 @@
+/* Home.css */
 .home-container {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    background-color: #f5f5f5;
-    align-items: center;
-    padding: 20px;
-  }
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #f5f5f5;
+  align-items: center;
+  padding: 20px;
+}
 
+.tab-navigation {
+  display: flex;
+  justify-content: space-around;
+  width: 90%;
+  max-width: 800px;
+  margin: 20px 0;
+  padding: 10px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tab-navigation button {
+  padding: 10px;
+  font-size: 18px;
+  margin: 0 5px; /* Add margin between buttons */
+  border: none;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.tab-navigation button:hover {
+  background-color: #0056b3;
+}
+
+.tab-navigation button.active {
+  font-weight: bold;
+  background-color: #0056b3;
+  border-bottom: 2px solid #ffffff;
+}
+
+.tab-content {
+  width: 90%;
+  max-width: 800px;
+  flex-grow: 1;
+  overflow-y: auto;
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  min-height: 60vh;
+}
+
+.tab-content.message-board-tab {
+  height: 70vh;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
   .tab-navigation {
-    display: flex;
-    justify-content: space-around;
-    width: 90%;
-    max-width: 800px;
-    margin: 20px 0;
-    padding: 10px;
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      flex-direction: column;
+      width: 100%;
+      padding: 5px;
   }
 
   .tab-navigation button {
-    padding: 10px 20px;
-    font-size: 16px;
-    border: none;
-    background-color: #007bff;
-    color: #ffffff;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border-radius: 4px;
-  }
-
-  .tab-navigation button:hover {
-    background-color: #0056b3;
-  }
-
-  .tab-navigation button.active {
-    font-weight: bold;
-    background-color: #0056b3;
-    border-bottom: 2px solid #ffffff;
+      font-size: 16px;
+      padding: 8px;
+      margin-bottom: 8px;
   }
 
   .tab-content {
-    width: 90%;
-    max-width: 800px;
-    flex-grow: 1;
-    overflow-y: auto;
-    background-color: #f9f9f9;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      padding: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .tab-navigation button {
+      font-size: 14px;
+      padding: 6px;
+      width: 90%;
+      margin: 5px auto;
+      background-color: #0056b3;
+      color: white;
+      border-radius: 4px;
+      text-align: center;
   }
 
-  .tab-content.message-board-tab {
-    height: 70vh;
+  .tab-navigation button:hover {
+      background-color: #003f7f;
   }
+
+  .tab-content {
+      padding: 10px;
+  }
+
+  .resource-item {
+      padding: 12px;
+      margin-bottom: 8px;
+  }
+
+  .quote-modal img {
+      width: 100%;
+      height: auto;
+      max-height: 400px; /* Reduce max-height for better visibility on desktop */
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* Additional Styles for Resource.js */
+.resource-item {
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.resource-item:hover {
+  background-color: #f0f0f0;
+}
+
+.resource-line {
+  margin: 5px 0;
+  font-size: 18px;
+}
+
+/* Add this to Home.css */
+@media (max-width: 480px) {
+  .tab-navigation {
+    flex-direction: column;
+  }
+
+  .tab-navigation button {
+    width: 90%;
+    font-size: 14px;
+    padding: 8px;
+    margin: 5px auto;
+  }
+}
