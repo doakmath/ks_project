@@ -6,7 +6,8 @@ const Auth0ProviderWithHistory = ({ children }) => {
   const [authConfig, setAuthConfig] = useState(null);
 
   useEffect(() => {
-    axios.get(`${process.env.REACT_APP_API_URL}auth0-config/`)
+    axios.get(`${process.env.REACT_APP_API_URL}/auth0-config/`)
+
       .then(response => {
         setAuthConfig(response.data);
       })
