@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Auth0Provider } from '@auth0/auth0-react';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const Auth0ProviderWithHistory = ({ children }) => {
-  const navigate = useNavigate();
   const [authConfig, setAuthConfig] = useState(null);
 
   useEffect(() => {
