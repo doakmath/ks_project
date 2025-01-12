@@ -25,7 +25,9 @@ function MessageBoard() {
         setComments(
           commentsResponse.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
         );
-        setReplies(repliesResponse.data);
+        setReplies(
+          repliesResponse.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+        );
         setLoading(false);
       })
       .catch(error => {
@@ -64,8 +66,10 @@ function MessageBoard() {
           nickname: user.nickname,
         });
 
-        // Immediately update the replies state to include the new reply
-        setReplies(prevReplies => [...prevReplies, response.data]);
+        // Immediately update the replies state to include the new reply, sorted by date
+        setReplies(prevReplies =>
+          [...prevReplies, response.data].sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+        );
 
         // Update the selected comment to show the new reply immediately
         setComments(prevComments =>
