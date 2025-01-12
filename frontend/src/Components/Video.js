@@ -9,7 +9,7 @@ function Video() {
 
   useEffect(() => {
     setLoading(true);
-    axios.get(`${API_URL}video/`)
+    axios.get(`${API_URL}/video/`)
       .then(response => {
         setVideo(response.data);
         setLoading(false);
