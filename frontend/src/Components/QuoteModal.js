@@ -12,23 +12,29 @@ function QuoteModal() {
   useEffect(() => {
     setLoading(true);
     Promise.all([
-      axios.get(`${API_URL}quotes/`),
-      axios.get(`${API_URL}image/`)
+      axios.get(`${API_URL}/quotes/`),
+      axios.get(`${API_URL}/image/`)
     ])
       .then(([quotesResponse, imagesResponse]) => {
-        if (quotesResponse.data.length > 0 && imagesResponse.data.length > 0) {
+        if (quotesResponse.data.length > 0) {
           const randomQuoteIndex = Math.floor(Math.random() * quotesResponse.data.length);
-          const randomImageIndex = Math.floor(Math.random() * imagesResponse.data.length);
           setRandomQuote(quotesResponse.data[randomQuoteIndex]);
+        }
+
+        if (imagesResponse.data.length > 0) {
+          const randomImageIndex = Math.floor(Math.random() * imagesResponse.data.length);
           setRandomImage(imagesResponse.data[randomImageIndex]);
-        } else {
+        }
+
+        if (quotesResponse.data.length === 0 && imagesResponse.data.length === 0) {
           setError('No quotes or images available.');
         }
+
         setLoading(false);
       })
       .catch(error => {
-        console.error('Failed to load quotes or images:', error);
-        setError('Failed to load quotes or images. Please try again later.');
+        console.error('Failed to load quotes or images:', error.message);
+        setError(`Failed to load quotes or images: ${error.message}`);
         setLoading(false);
       });
   }, []);

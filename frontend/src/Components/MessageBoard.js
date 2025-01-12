@@ -14,7 +14,7 @@ function MessageBoard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch both comments and replies
+  // Fetch both comments and replies once when the component mounts
   useEffect(() => {
     setLoading(true);
     Promise.all([
@@ -33,7 +33,7 @@ function MessageBoard() {
         setError('Failed to load comments and replies. Please try again later.');
         setLoading(false);
       });
-  }, [newComment, newReply]); // Trigger useEffect to refresh when new comments or replies are added
+  }, []);
 
   // Handle new comment submission
   const handleCommentSubmit = async () => {
@@ -65,7 +65,6 @@ function MessageBoard() {
         });
         setReplies([...replies, response.data]);
         setNewReply('');
-        setSelectedCommentId(commentId);
       } catch (error) {
         console.error(error);
         setError('Failed to post reply. Please try again later.');
