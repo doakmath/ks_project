@@ -12,8 +12,8 @@ function QuoteModal() {
   useEffect(() => {
     setLoading(true);
     Promise.all([
-      axios.get(`${API_URL}/quotes/`),
-      axios.get(`${API_URL}/image/`)
+      axios.get(`${API_URL}quotes/`),
+      axios.get(`${API_URL}image/`)
     ])
       .then(([quotesResponse, imagesResponse]) => {
         if (quotesResponse.data.length > 0 && imagesResponse.data.length > 0) {

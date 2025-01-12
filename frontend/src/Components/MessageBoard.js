@@ -37,7 +37,7 @@ function MessageBoard() {
   const handleCommentSubmit = async () => {
     if (newComment.trim() && isAuthenticated && user) {
       try {
-        const response = await axios.post(`${API_URL}comment/`, {
+        const response = await axios.post(`${API_URL}/comment/`, {
           message: newComment,
           user_sub: user.sub,
           nickname: user.nickname,
@@ -55,7 +55,7 @@ function MessageBoard() {
   const handleReplySubmit = async (commentId) => {
     if (newReply.trim() && isAuthenticated && user) {
       try {
-        const response = await axios.post(`${API_URL}reply/create/`, {
+        const response = await axios.post(`${API_URL}/reply/create/`, {
           comment: commentId,
           reply: newReply,
           user_sub: user.sub,
