@@ -67,7 +67,7 @@ function MessageBoard() {
         // Update the replies state immediately after posting a reply
         setReplies((prevReplies) => [
           ...prevReplies,
-          { ...response.data, comment: commentId }
+          { id: response.data.id, comment: commentId, nickname: response.data.nickname, reply: response.data.reply, created_at: response.data.created_at }
         ]);
 
         setNewReply('');
