@@ -57,4 +57,6 @@ urlpatterns = [
     path('sync_user/', views.sync_user, name='sync_user'),
     # Create superuser endpoint
     path('create-superuser/', views.create_superuser, name='create_superuser'),
+    # Auth0 config endpoint
+    path('auth0-config/', views.get_auth0_config, name='auth0-config'),
 ]

@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from django.http import JsonResponse
 from rest_framework import status
 from django.contrib.auth.models import User
+from django.conf import settings
 
 
 from .models import (
@@ -587,3 +588,11 @@ def create_superuser(request):
 
         User.objects.create_superuser(username=username, email=email, password=password)
         return Response({'success': 'Superuser created successfully'}, status=status.HTTP_201_CREATED)
+
+
+#                                 Auth0 config endpoint
+def get_auth0_config(request):
+    return JsonResponse({
+        'auth0_domain': settings.AUTH0_DOMAIN,
+        'auth0_client_id': settings.AUTH0_CLIENT_ID
+    })

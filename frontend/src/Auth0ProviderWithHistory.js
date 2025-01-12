@@ -1,24 +1,33 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Auth0Provider } from '@auth0/auth0-react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Auth0ProviderWithHistory = ({ children }) => {
   const navigate = useNavigate();
+  const [authConfig, setAuthConfig] = useState(null);
 
-  const onRedirectCallback = (appState) => {
-    try {
-      navigate(appState?.returnTo || '/home');
-    } catch (error) {
-      console.error('Navigation error:', error);
-    }
-  };
+  useEffect(() => {
+    axios.get(`${process.env.REACT_APP_API_URL}auth0-config/`)
+      .then(response => {
+        setAuthConfig(response.data);
+      })
+      .catch(error => {
+        console.error('Failed to load Auth0 config:', error);
+      });
+  }, []);
+
+  if (!authConfig) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <Auth0Provider
-      domain={process.env.REACT_APP_AUTH0_DOMAIN}
-      clientId={process.env.REACT_APP_AUTH0_CLIENT_ID}
-      authorizationParams={{ redirect_uri: window.location.origin }}
-      onRedirectCallback={onRedirectCallback}
+      domain={authConfig.auth0_domain}
+      clientId={authConfig.auth0_client_id}
+      authorizationParams={{
+        redirect_uri: window.location.origin
+      }}
     >
       {children}
     </Auth0Provider>
