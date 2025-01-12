@@ -18,11 +18,13 @@ function MessageBoard() {
   useEffect(() => {
     setLoading(true);
     Promise.all([
-      axios.get(`${API_URL}comment/`),
-      axios.get(`${API_URL}reply/`)
+      axios.get(`${API_URL}/comment/`),
+      axios.get(`${API_URL}/reply/`)
     ])
       .then(([commentsResponse, repliesResponse]) => {
-        setComments(commentsResponse.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)));
+        setComments(
+          commentsResponse.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+        );
         setReplies(repliesResponse.data);
         setLoading(false);
       })
@@ -31,7 +33,7 @@ function MessageBoard() {
         setError('Failed to load comments and replies. Please try again later.');
         setLoading(false);
       });
-  }, []);
+  }, [newComment, newReply]); // Trigger useEffect to refresh when new comments or replies are added
 
   // Handle new comment submission
   const handleCommentSubmit = async () => {
