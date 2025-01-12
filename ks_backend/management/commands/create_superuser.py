@@ -18,6 +18,3 @@ class Command(BaseCommand):
             self.stdout.write(self.style.SUCCESS(f"Superuser '{username}' created successfully!"))
         else:
             self.stdout.write(self.style.WARNING(f"Superuser '{username}' already exists."))
-
-        # Add a print statement to ensure it's logged on Render
-        print(f"Superuser '{username}' process completed")
