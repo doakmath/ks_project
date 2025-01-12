@@ -64,19 +64,19 @@ function MessageBoard() {
           nickname: user.nickname,
         });
 
-        // Update the replies state immediately after posting a reply
-        setReplies((prevReplies) => {
-          const updatedReplies = [...prevReplies, response.data];
-          return updatedReplies.map(reply => {
-            if (typeof reply === 'string') {
-              return JSON.parse(reply);
-            }
-            return reply;
-          });
-        });
+        // Immediately update the replies state to include the new reply
+        setReplies(prevReplies => [...prevReplies, response.data]);
+
+        // Update the selected comment to show the new reply immediately
+        setComments(prevComments =>
+          prevComments.map(comment =>
+            comment.id === commentId
+              ? { ...comment, replies: [...(comment.replies || []), response.data] }
+              : comment
+          )
+        );
 
         setNewReply('');
-        setSelectedCommentId(commentId);
       } catch (error) {
         console.error(error);
         setError('Failed to post reply. Please try again later.');
