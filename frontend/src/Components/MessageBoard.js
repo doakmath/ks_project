@@ -70,14 +70,11 @@ function MessageBoard() {
         });
         console.log('New reply response:', response.data);
 
-        // Update the replies state to include the new reply
+        // Update both replies and comments state
         setReplies(prevReplies =>
           [...prevReplies, response.data].sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
         );
-
-        // Refresh the UI by toggling the selected comment to trigger a re-render
-        setSelectedCommentId(null);
-        setTimeout(() => setSelectedCommentId(commentId), 0);
+        updateCommentsWithReply(commentId, response.data);
 
         setNewReply('');
       } catch (error) {
@@ -85,6 +82,20 @@ function MessageBoard() {
         setError('Failed to post reply. Please try again later.');
       }
     }
+  };
+
+  // Function to update comments with the new reply
+  const updateCommentsWithReply = (commentId, newReply) => {
+    setComments(prevComments =>
+      prevComments.map(comment =>
+        comment.id === commentId
+          ? {
+              ...comment,
+              replies: [...(comment.replies || []), newReply]
+            }
+          : comment
+      )
+    );
   };
 
   return (
