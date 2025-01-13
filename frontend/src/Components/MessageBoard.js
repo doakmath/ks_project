@@ -75,22 +75,9 @@ function MessageBoard() {
           [...prevReplies, response.data].sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
         );
 
-        // Update the corresponding comment's replies in the comments state
-        setComments(prevComments =>
-          prevComments.map(comment => {
-            if (comment.id === commentId) {
-              console.log('Updating comment with new reply:', response.data);
-            }
-            return comment.id === commentId
-              ? {
-                  ...comment,
-                  replies: [...(comment.replies || []), response.data].sort(
-                    (a, b) => new Date(b.created_at) - new Date(a.created_at)
-                  ),
-                }
-              : comment;
-          })
-        );
+        // Refresh the UI by toggling the selected comment to trigger a re-render
+        setSelectedCommentId(null);
+        setTimeout(() => setSelectedCommentId(commentId), 0);
 
         setNewReply('');
       } catch (error) {
