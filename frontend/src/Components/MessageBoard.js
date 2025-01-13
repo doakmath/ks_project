@@ -14,7 +14,6 @@ function MessageBoard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch both comments and replies once when the component mounts
   useEffect(() => {
     setLoading(true);
     axios.get(`${API_URL}/comments-with-replies/`)
@@ -31,6 +30,7 @@ function MessageBoard() {
         setLoading(false);
       });
   }, []);
+
 
 
   // Handle new comment submission

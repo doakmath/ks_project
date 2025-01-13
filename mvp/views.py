@@ -30,6 +30,7 @@ from .serializers import (
     ReplySerializer
 )
 
+
 #                    Comment with Replies endpoints
 class CommentsWithRepliesView(APIView):
     """
@@ -37,7 +38,7 @@ class CommentsWithRepliesView(APIView):
     """
     def get(self, request):
         try:
-            # Prefetch replies to reduce database queries
+            # Fetch all comments and their associated replies
             comments = Comment.objects.prefetch_related('reply_set').all()
 
             # Construct the response data
@@ -50,6 +51,7 @@ class CommentsWithRepliesView(APIView):
                     "replies": [
                         {
                             "id": reply.id,
+                            "comment": reply.comment_id,
                             "reply": reply.reply,
                             "nickname": reply.nickname,
                             "created_at": reply.created_at
@@ -61,9 +63,12 @@ class CommentsWithRepliesView(APIView):
             ]
 
             return Response(data, status=status.HTTP_200_OK)
+
         except Exception as e:
+            # Log the error for debugging
+            print(f"Error fetching comments with replies: {e}")
             return Response(
-                {"error": "Something went wrong while fetching comments and replies."},
+                {"error": "An error occurred while fetching comments with replies."},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
