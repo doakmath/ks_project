@@ -17,11 +17,13 @@
   justify-content: center;
   align-items: center;
   padding: 20px;
-  color: #fff;
+  color: rgba(255, 255, 255, 0.96); /* Slightly less white */
+  font-size: 14px; /* 40% smaller than before */
   text-align: center;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
   background-size: cover;
   background-position: center;
+  position: relative;
 }
 
 .quote-image {
@@ -37,23 +39,8 @@
   left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;
-  color: #fff;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-  font-size: calc(1rem + 1vw); /* Responsive font size */
-  max-width: 85%; /* Ensures the quote text stays within image boundaries */
-  word-wrap: break-word; /* Prevents long words from breaking layout */
-  overflow: hidden;
-}
-
-@media (max-width: 768px) {
-  .quote-text {
-    font-size: calc(0.8rem + 1vw);
-    padding: 10px;
-  }
-}
-
-@media (max-width: 480px) {
-  .quote-text {
-    font-size: calc(0.7rem + 1vw);
-  }
+  color: rgba(255, 255, 255, 0.96); /* Slightly less white */
+  max-width: 90%; /* Allow text to stretch wider on both sides */
+  line-height: 1.4;
+  white-space: pre-wrap;
 }
