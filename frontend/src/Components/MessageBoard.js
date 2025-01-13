@@ -71,10 +71,23 @@ function MessageBoard() {
         console.log('New reply response:', response.data);
 
         // Update both replies and comments state
-        setReplies(prevReplies =>
-          [...prevReplies, response.data].sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-        );
-        updateCommentsWithReply(commentId, response.data);
+        setReplies(prevReplies => {
+          const updatedReplies = [...prevReplies, response.data].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+          console.log('Updated replies:', updatedReplies);
+          return updatedReplies;
+        });
+
+        // Update the comments state with the new reply directly
+        setComments(prevComments => {
+          return prevComments.map(comment => {
+            if (comment.id === commentId) {
+              const updatedReplies = [...(comment.replies || []), response.data];
+              console.log('Updated replies for comment:', updatedReplies);
+              return { ...comment, replies: updatedReplies };
+            }
+            return comment;
+          });
+        });
 
         setNewReply('');
       } catch (error) {
@@ -82,20 +95,6 @@ function MessageBoard() {
         setError('Failed to post reply. Please try again later.');
       }
     }
-  };
-
-  // Function to update comments with the new reply
-  const updateCommentsWithReply = (commentId, newReply) => {
-    setComments(prevComments =>
-      prevComments.map(comment =>
-        comment.id === commentId
-          ? {
-              ...comment,
-              replies: [...(comment.replies || []), newReply]
-            }
-          : comment
-      )
-    );
   };
 
   return (
