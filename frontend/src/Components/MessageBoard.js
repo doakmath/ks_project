@@ -35,7 +35,7 @@ function MessageBoard() {
         setError('Failed to load comments and replies. Please try again later.');
         setLoading(false);
       });
-  }, [replies]);
+  }, []);
 
   // Handle new comment submission
   const handleCommentSubmit = async () => {
@@ -66,9 +66,23 @@ function MessageBoard() {
           nickname: user.nickname,
         });
 
-        // Immediately update the replies state to include the new reply, sorted by date
+        // Update the replies state to include the new reply
         setReplies(prevReplies =>
           [...prevReplies, response.data].sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+        );
+
+        // Update the corresponding comment's replies in the comments state
+        setComments(prevComments =>
+          prevComments.map(comment =>
+            comment.id === commentId
+              ? {
+                  ...comment,
+                  replies: [...(comment.replies || []), response.data].sort(
+                    (a, b) => new Date(b.created_at) - new Date(a.created_at)
+                  ),
+                }
+              : comment
+          )
         );
 
         setNewReply('');
