@@ -112,9 +112,9 @@ function MessageBoard() {
 
                 {selectedCommentId === comment.id && (
                   <ul className="replies-list">
-                    {comment.replies.map(reply => (
+                    {comment.replies.slice().reverse().map((reply, index) => (
                       <li key={reply.id} className="reply-item">
-                        <p>↪ {reply.reply}</p>
+                        <p>↪ {index + 1}. {reply.reply}</p>
                         <p>- {reply.nickname || 'Anonymous'}</p>
                         <p>{new Date(reply.created_at).toLocaleString()}</p>
                       </li>
