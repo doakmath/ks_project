@@ -40,7 +40,7 @@ function MessageBoard() {
   const handleCommentSubmit = async () => {
     if (newComment.trim() && isAuthenticated && user) {
       try {
-        const response = await axios.post(`${API_URL}/comment/`, {
+        await axios.post(`${API_URL}/comment/`, {
           message: newComment,
           user_sub: user.sub,
           nickname: user.nickname,
@@ -57,7 +57,7 @@ function MessageBoard() {
   const handleReplySubmit = async (commentId) => {
     if (newReply.trim() && isAuthenticated && user) {
       try {
-        const response = await axios.post(`${API_URL}/reply/create/`, {
+        await axios.post(`${API_URL}/reply/create/`, {
           comment: commentId,
           reply: newReply,
           user_sub: user.sub,
@@ -106,13 +106,15 @@ function MessageBoard() {
 
                 {selectedCommentId === comment.id && (
                   <ul className="replies-list">
-                    {comment.replies.map((reply, index) => (
-                      <li key={reply.id} className="reply-item">
-                        <p>↪ {index + 1}. {reply.reply}</p>
-                        <p>- {reply.nickname || 'Anonymous'}</p>
-                        <p>{new Date(reply.created_at).toLocaleString()}</p>
-                      </li>
-                    ))}
+                    {comment.replies
+                      .sort((a, b) => new Date(a.created_at) - new Date(b.created_at)) // Sort replies oldest to newest
+                      .map((reply, index) => (
+                        <li key={reply.id} className="reply-item">
+                          <p>↪ {index + 1}. {reply.reply}</p>
+                          <p>- {reply.nickname || 'Anonymous'}</p>
+                          <p>{new Date(reply.created_at).toLocaleString()}</p>
+                        </li>
+                      ))}
                     <li className="new-reply">
                       <input
                         type="text"
