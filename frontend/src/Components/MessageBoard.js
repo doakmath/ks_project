@@ -18,7 +18,6 @@ function MessageBoard() {
     setLoading(true);
     axios.get(`${API_URL}/comments-with-replies/`)
       .then((response) => {
-        console.log('Fetched comments with replies:', response.data);
         setComments(
           response.data.map(comment => ({
             ...comment,
@@ -28,7 +27,6 @@ function MessageBoard() {
         setLoading(false);
       })
       .catch(error => {
-        console.error(error);
         setError('Failed to load comments and replies. Please try again later.');
         setLoading(false);
       });
@@ -47,11 +45,9 @@ function MessageBoard() {
           user_sub: user.sub,
           nickname: user.nickname,
         });
-        console.log('New comment response:', response.data);
         fetchCommentsWithReplies(); // Fetch updated comments and replies
         setNewComment('');
       } catch (error) {
-        console.error(error);
         setError('Failed to post comment. Please try again later.');
       }
     }
@@ -67,11 +63,9 @@ function MessageBoard() {
           user_sub: user.sub,
           nickname: user.nickname,
         });
-        console.log('New reply response:', response.data);
         fetchCommentsWithReplies(); // Fetch updated comments and replies
         setNewReply('');
       } catch (error) {
-        console.error(error);
         setError('Failed to post reply. Please try again later.');
       }
     }
@@ -112,7 +106,7 @@ function MessageBoard() {
 
                 {selectedCommentId === comment.id && (
                   <ul className="replies-list">
-                    {comment.replies.slice().reverse().map((reply, index) => (
+                    {comment.replies.map((reply, index) => (
                       <li key={reply.id} className="reply-item">
                         <p>↪ {index + 1}. {reply.reply}</p>
                         <p>- {reply.nickname || 'Anonymous'}</p>
