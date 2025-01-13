@@ -22,6 +22,8 @@ function MessageBoard() {
       axios.get(`${API_URL}/reply/`)
     ])
       .then(([commentsResponse, repliesResponse]) => {
+        console.log('Fetched comments:', commentsResponse.data);
+        console.log('Fetched replies:', repliesResponse.data);
         setComments(
           commentsResponse.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
         );
@@ -46,6 +48,7 @@ function MessageBoard() {
           user_sub: user.sub,
           nickname: user.nickname,
         });
+        console.log('New comment response:', response.data);
         setComments([response.data, ...comments]);
         setNewComment('');
       } catch (error) {
@@ -65,6 +68,7 @@ function MessageBoard() {
           user_sub: user.sub,
           nickname: user.nickname,
         });
+        console.log('New reply response:', response.data);
 
         // Update the replies state to include the new reply
         setReplies(prevReplies =>
@@ -73,16 +77,19 @@ function MessageBoard() {
 
         // Update the corresponding comment's replies in the comments state
         setComments(prevComments =>
-          prevComments.map(comment =>
-            comment.id === commentId
+          prevComments.map(comment => {
+            if (comment.id === commentId) {
+              console.log('Updating comment with new reply:', response.data);
+            }
+            return comment.id === commentId
               ? {
                   ...comment,
                   replies: [...(comment.replies || []), response.data].sort(
                     (a, b) => new Date(b.created_at) - new Date(a.created_at)
                   ),
                 }
-              : comment
-          )
+              : comment;
+          })
         );
 
         setNewReply('');
