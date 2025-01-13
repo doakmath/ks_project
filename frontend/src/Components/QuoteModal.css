@@ -17,8 +17,9 @@
   justify-content: center;
   align-items: center;
   padding: 20px;
-  color: rgba(255, 255, 255, 0.96); /* Slightly less white */
-  font-size: 14px; /* 40% smaller than before */
+  color: rgba(255, 255, 255, 0.94); /* 6% less white */
+  font-size: 18px; /* 20% bigger than before */
+  font-weight: 300; /* Slender font style */
   text-align: center;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
   background-size: cover;
@@ -39,7 +40,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;
-  color: rgba(255, 255, 255, 0.96); /* Slightly less white */
+  color: rgba(255, 255, 255, 0.94); /* 6% less white */
   max-width: 90%; /* Allow text to stretch wider on both sides */
   line-height: 1.4;
   white-space: pre-wrap;

@@ -34,18 +34,19 @@ function Video() {
       <h1>Video Library</h1>
       <ul>
         {video.map(vid => (
-          <li key={vid.id}>
+          <li key={vid.id} style={{ marginBottom: '20px' }}>
             <h2>{vid.title}</h2>
             <p>{vid.description}</p>
             {vid.video_url ? (
               <iframe
-                width="560"
-                height="315"
+                width="392"  /* Adjusted to 30% smaller width */
+                height="220"  /* Adjusted to 30% smaller height */
                 src={vid.video_url}
                 title={vid.title}
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
+                style={{ borderRadius: '12px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}
               ></iframe>
             ) : (
               <p>No video available.</p>
