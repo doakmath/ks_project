@@ -14,7 +14,7 @@ function MessageBoard() {
   const [error, setError] = useState(null);
 
   // Fetch comments with replies from the new endpoint
-  useEffect(() => {
+  const fetchCommentsWithReplies = () => {
     setLoading(true);
     axios.get(`${API_URL}/comments-with-replies/`)
       .then((response) => {
@@ -32,6 +32,10 @@ function MessageBoard() {
         setError('Failed to load comments and replies. Please try again later.');
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    fetchCommentsWithReplies();
   }, []);
 
   // Handle new comment submission
@@ -44,7 +48,7 @@ function MessageBoard() {
           nickname: user.nickname,
         });
         console.log('New comment response:', response.data);
-        setComments([response.data, ...comments]);
+        fetchCommentsWithReplies(); // Fetch updated comments and replies
         setNewComment('');
       } catch (error) {
         console.error(error);
@@ -64,20 +68,7 @@ function MessageBoard() {
           nickname: user.nickname,
         });
         console.log('New reply response:', response.data);
-
-        // Update the comments state to include the new reply immediately
-        setComments(prevComments => {
-          return prevComments.map(comment => {
-            if (comment.id === commentId) {
-              return {
-                ...comment,
-                replies: [...(comment.replies || []), response.data.reply] // Ensure replies array exists
-              };
-            }
-            return comment;
-          });
-        });
-
+        fetchCommentsWithReplies(); // Fetch updated comments and replies
         setNewReply('');
       } catch (error) {
         console.error(error);
