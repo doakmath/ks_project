@@ -1,0 +1,26 @@
+/* Resource.css (or Home.css) */
+
+/* Remove the default list item styling */
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* Style the resource items */
+  .resource-item h2 {
+    display: inline; /* Prevents the block-level box around the title */
+    font-size: 20px;
+    color: #007bff;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .resource-item h2:hover {
+    text-decoration: none; /* Removes underline on hover */
+  }
+
+  /* Optional: Add spacing between items */
+  .resource-item {
+    margin-bottom: 10px;
+  }

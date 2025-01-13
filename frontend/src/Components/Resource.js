@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './Home.css';
+import './Resource.css';
 import API_URL from '../config';
 
 function Resource() {
@@ -69,15 +70,13 @@ function Resource() {
             <li key={resource.id} className="resource-item">
               <h2
                 onClick={() => toggleResource(resource)}
-                style={{ cursor: 'pointer', color: '#007bff', textDecoration: 'underline' }}
-                onMouseEnter={(e) => (e.target.style.textDecoration = 'none')}
-                onMouseLeave={(e) => (e.target.style.textDecoration = 'underline')}
               >
                 {resource.title}
               </h2>
             </li>
           ))}
         </ul>
+
       )}
     </div>
   );
