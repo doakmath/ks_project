@@ -20,7 +20,10 @@ function MessageBoard() {
       .then((response) => {
         console.log('Fetched comments with replies:', response.data);
         setComments(
-          response.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+          response.data.map(comment => ({
+            ...comment,
+            replies: comment.replies || [] // Ensure replies is always an array
+          })).sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
         );
         setLoading(false);
       })
@@ -68,7 +71,7 @@ function MessageBoard() {
             if (comment.id === commentId) {
               return {
                 ...comment,
-                replies: [...comment.replies, response.data.reply]
+                replies: [...(comment.replies || []), response.data.reply] // Ensure replies array exists
               };
             }
             return comment;
@@ -113,7 +116,7 @@ function MessageBoard() {
                   className="reply-count"
                   onClick={() => setSelectedCommentId(comment.id === selectedCommentId ? null : comment.id)}
                 >
-                  {comment.replies.length} Replies
+                  {(comment.replies ? comment.replies.length : 0)} Replies
                 </p>
 
                 {selectedCommentId === comment.id && (
