@@ -38,8 +38,8 @@ class CommentsWithRepliesView(APIView):
     """
     def get(self, request):
         try:
-            # Fetch all comments and their associated replies
-            comments = Comment.objects.prefetch_related('reply_set').all()
+            # Use the related_name 'replies' instead of 'reply_set'
+            comments = Comment.objects.prefetch_related('replies').all()
 
             # Construct the response data
             data = [
@@ -56,7 +56,7 @@ class CommentsWithRepliesView(APIView):
                             "nickname": reply.nickname,
                             "created_at": reply.created_at
                         }
-                        for reply in comment.reply_set.all()
+                        for reply in comment.replies.all()
                     ]
                 }
                 for comment in comments
@@ -65,12 +65,13 @@ class CommentsWithRepliesView(APIView):
             return Response(data, status=status.HTTP_200_OK)
 
         except Exception as e:
-            # Log the error for debugging
+            # Improved error logging for better debugging
             print(f"Error fetching comments with replies: {e}")
             return Response(
                 {"error": "An error occurred while fetching comments with replies."},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
+
 
 # Lessons endpoints
 

@@ -7,17 +7,17 @@ import API_URL from '../config';
 function MessageBoard() {
   const { user, isAuthenticated } = useAuth0();
   const [comments, setComments] = useState([]);
-  const [replies, setReplies] = useState([]);
   const [selectedCommentId, setSelectedCommentId] = useState(null);
   const [newComment, setNewComment] = useState('');
   const [newReply, setNewReply] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Fetch comments with replies from the new endpoint
   useEffect(() => {
     setLoading(true);
     axios.get(`${API_URL}/comments-with-replies/`)
-      .then(response => {
+      .then((response) => {
         console.log('Fetched comments with replies:', response.data);
         setComments(
           response.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
@@ -30,8 +30,6 @@ function MessageBoard() {
         setLoading(false);
       });
   }, []);
-
-
 
   // Handle new comment submission
   const handleCommentSubmit = async () => {
@@ -64,20 +62,14 @@ function MessageBoard() {
         });
         console.log('New reply response:', response.data);
 
-        // Update both replies and comments state
-        setReplies(prevReplies => {
-          const updatedReplies = [...prevReplies, response.data].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-          console.log('Updated replies:', updatedReplies);
-          return updatedReplies;
-        });
-
-        // Update the comments state with the new reply directly
+        // Update the comments state to include the new reply immediately
         setComments(prevComments => {
           return prevComments.map(comment => {
             if (comment.id === commentId) {
-              const updatedReplies = [...(comment.replies || []), response.data];
-              console.log('Updated replies for comment:', updatedReplies);
-              return { ...comment, replies: updatedReplies };
+              return {
+                ...comment,
+                replies: [...comment.replies, response.data.reply]
+              };
             }
             return comment;
           });
@@ -121,12 +113,12 @@ function MessageBoard() {
                   className="reply-count"
                   onClick={() => setSelectedCommentId(comment.id === selectedCommentId ? null : comment.id)}
                 >
-                  {replies.filter(reply => reply.comment === comment.id).length} Replies
+                  {comment.replies.length} Replies
                 </p>
 
                 {selectedCommentId === comment.id && (
                   <ul className="replies-list">
-                    {replies.filter(reply => reply.comment === comment.id).map(reply => (
+                    {comment.replies.map(reply => (
                       <li key={reply.id} className="reply-item">
                         <p>↪ {reply.reply}</p>
                         <p>- {reply.nickname || 'Anonymous'}</p>
