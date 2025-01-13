@@ -1,13 +1,12 @@
 from django.shortcuts import render, get_object_or_404
+from django.http import JsonResponse
+from django.contrib.auth.models import User
+from django.conf import settings
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
-from django.http import JsonResponse
+from rest_framework.views import APIView
 from rest_framework import status
-from django.contrib.auth.models import User
-from django.conf import settings
-
-
 from .models import (
     Lesson,
     UserLessonProgress,
@@ -31,8 +30,42 @@ from .serializers import (
     ReplySerializer
 )
 
+#                    Comment with Replies endpoints
+class CommentsWithRepliesView(APIView):
+    """
+    API endpoint to return comments with their associated replies.
+    """
+    def get(self, request):
+        try:
+            # Prefetch replies to reduce database queries
+            comments = Comment.objects.prefetch_related('reply_set').all()
 
+            # Construct the response data
+            data = [
+                {
+                    "id": comment.id,
+                    "message": comment.message,
+                    "nickname": comment.nickname,
+                    "created_at": comment.created_at,
+                    "replies": [
+                        {
+                            "id": reply.id,
+                            "reply": reply.reply,
+                            "nickname": reply.nickname,
+                            "created_at": reply.created_at
+                        }
+                        for reply in comment.reply_set.all()
+                    ]
+                }
+                for comment in comments
+            ]
 
+            return Response(data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(
+                {"error": "Something went wrong while fetching comments and replies."},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
 
 # Lessons endpoints
 

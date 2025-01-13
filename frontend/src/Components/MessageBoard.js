@@ -17,18 +17,11 @@ function MessageBoard() {
   // Fetch both comments and replies once when the component mounts
   useEffect(() => {
     setLoading(true);
-    Promise.all([
-      axios.get(`${API_URL}/comment/`),
-      axios.get(`${API_URL}/reply/`)
-    ])
-      .then(([commentsResponse, repliesResponse]) => {
-        console.log('Fetched comments:', commentsResponse.data);
-        console.log('Fetched replies:', repliesResponse.data);
+    axios.get(`${API_URL}/comments-with-replies/`)
+      .then(response => {
+        console.log('Fetched comments with replies:', response.data);
         setComments(
-          commentsResponse.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-        );
-        setReplies(
-          repliesResponse.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+          response.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
         );
         setLoading(false);
       })
@@ -38,6 +31,7 @@ function MessageBoard() {
         setLoading(false);
       });
   }, []);
+
 
   // Handle new comment submission
   const handleCommentSubmit = async () => {
